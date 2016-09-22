@@ -1,0 +1,48 @@
+##while loop
+
+def make_better_change(target, coin_types)
+  coin = target
+  change = []
+  while coin > 0
+    predictions = {}
+    coin_types.each do |coin_taken|
+      next if target < coin_taken
+      remaining_change = coin - coin_taken
+      total_coin_predicted = 1
+
+      coin_types.each do |denom|
+        total_coin_predicted += remaining_change/denom
+        remaining_change %= denom
+      end
+
+      predictions[coin_taken] = total_coin_predicted
+    end
+    reading = predictions.min_by{|key, value| value}[0]
+    change += [reading]
+    coin -= reading
+  end
+  change
+end
+
+##recursion
+def make_better_change(target, coin_types)
+  return [] if target == 0
+
+  predictions = {}
+  coin_types.each do |coin_taken|
+    next if target < coin_taken
+    remaining_change = target - coin_taken
+    total_coin_predicted = 1
+
+    coin_types.each do |denom|
+      total_coin_predicted += remaining_change/denom
+      remaining_change %= denom
+    end
+
+    predictions[coin_taken] = total_coin_predicted
+  end
+
+  reading = predictions.min_by{|key, value| value}[0]
+
+  [reading] + make_better_change(target-reading, coin_types)
+end
